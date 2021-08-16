@@ -1,0 +1,121 @@
+.register {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.938);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.registerWrapper {
+    width: 70%;
+    height: 85%;
+    background-color: rgb(255, 255, 252);
+    display: flex;
+}
+
+.registerLeft {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.registerRight {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.registerLogo {
+    font-size: 50px;
+    font-weight: 700;
+    color: rgba(51, 0, 0, 0.884);
+}
+
+.registerDescription {
+    font-size: 20px;
+}
+
+/* form */
+
+.registerBox {
+    height: 100%;
+    width: 70%;
+    padding: 20px;
+    background-color: white;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid black;
+}
+
+.input {
+    height: 30px;
+    border-radius: 13px;
+    width: 80%;
+    border: 1px solid rgb(0, 0, 0);
+    font-size: 22px;
+    padding: 10px;
+    align-self: center;
+    display: block;
+    outline: none;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.registerButton {
+    outline: none;
+    border-radius: 15px;
+    border: none;
+    color: rgb(255, 255, 255);
+    background-color: rgb(82, 0, 0);
+    height: 60px;
+    width: 200px;
+    font-size: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 35px;
+    align-self: center;
+}
+
+.registerSub:hover {
+    background-color: rgb(36, 35, 35);
+}
+
+.genderSelect {
+    margin-top: 10px;
+    align-self: center;
+}
+
+.loginRedirect {
+    outline: none;
+    border-radius: 15px;
+    border: none;
+    color: rgb(255, 255, 255);
+    background-color: rgba(0, 80, 199, 0.699);
+    height: 60px;
+    width: 130px;
+    font-size: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 35px;
+    align-self: flex-start;
+}
+
+.errorMsg {
+    margin-bottom: 0;
+    color: #842029;
+    background-color: #f8d7da;
+    border-color: #f5c2c7;
+    padding: 3px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    width: fit-content;
+    font-size: small;
+    margin: 0 auto;
+
+
+}

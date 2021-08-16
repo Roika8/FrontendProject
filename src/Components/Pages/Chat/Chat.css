@@ -1,0 +1,129 @@
+.mainWrapper {
+    width: 100%;
+    height: calc(100vh - 20px);
+    display: flex;
+    margin-left: 20px;
+}
+
+.allUsers {
+    flex: 1;
+    border: 1px solid black;
+}
+
+.onlineUsers {
+    flex: 1;
+    border: 1px solid black;
+}
+
+.chatArea {
+    flex: 2;
+    border: 1px solid black;
+}
+
+.gameBoard {
+    flex: 5;
+    border: 1px solid black;
+}
+
+.allUsersWrapper, .onlineUsersWrapper, .chatAreaWrapper {
+    padding: 10px;
+    height: 100%;
+}
+
+.chatAreaWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.chatAreaTop {
+    height: 100%;
+    overflow-y: scroll;
+    padding-right: 30px;
+    padding-left: 30px;
+}
+
+.chatAreaButtom {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.chatMessageInput {
+    width: 80%;
+    height: 60px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.chatMessageInput:focus {
+    outline: none;
+    border: 2px solid black;
+}
+
+.chatSubmitButton {
+    width: 80px;
+    height: 40px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgb(0, 148, 35);
+    color: white;
+    margin-left: 8%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.chatSubmitButton:hover {
+    background-color: rgba(0, 7, 140, 0.51);
+
+
+    color: black;
+}
+
+.userSearch {
+    width: 90%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: none;
+    border-bottom: 1px solid rgb(184, 57, 57)
+}
+
+.noSelectedFriend {
+    color: rgb(0, 0, 0);
+    margin-top: 100%;
+    background-color: rgba(231, 207, 20, 0.3);
+    border-radius: 5px;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.template {
+    background-image: url("../../../image//backgroundStarter.png");
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    background-position-x: center;
+    background-position-y: center;
+    display: flex;
+
+    justify-content:start;
+
+   }
+
+.welcomeSentence{
+    font-size: 30px;
+    font-family: sans-serif;
+    margin-left: 22%;
+    margin-top: 43.5%;
+    animation-name: changeColor;
+    animation-duration: 2s;
+    animation-iteration-count:infinite;
+
+}
+@keyframes changeColor {
+    0%   {color:rgba(255, 255, 255, 0.977)}
+  50%  {color:rgba(1, 57, 12, 0.353)}
+  100% {color:rgba(255, 255, 255, 0.768)}
+
+}

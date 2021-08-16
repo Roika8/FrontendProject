@@ -1,0 +1,26 @@
+.checker {
+    position: relative;
+    width: 80%;
+    margin: 0px auto;
+    border-radius: 50%;
+    overflow: hidden;
+    height: 10%;
+}
+
+.Dark {
+    background: rgb(3, 3, 3);
+}
+
+.Bright {
+    background: rgb(255, 255, 255);
+}
+
+.disable {
+    cursor: not-allowed;
+}
+.enable{
+    border: 2px solid lime;
+}
+.selected{
+    border: 5px solid rgb(13, 182, 220);
+}

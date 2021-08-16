@@ -1,0 +1,138 @@
+/* //Main page */
+
+.login {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.938);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* //Wrapper of the page */
+
+.loginWrapper {
+    width: 70%;
+    height: 70%;
+    background-color: rgb(255, 255, 252);
+    display: flex;
+}
+
+/* Right side- where the form is*/
+
+.loginRight {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* left side- where the logo and description */
+
+.loginLeft {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* at the left side */
+
+.loginLogo {
+    font-size: 60px;
+    font-weight: 1000;
+    color: rgba(0, 0, 0, 0.884);
+}
+
+/* at the left side */
+
+.loginDescription {
+    font-size: 20px;
+    font-family: sans-serif;
+    padding: 10px;
+}
+
+.loginDescription div {
+    margin: 7px;
+}
+
+/* form */
+
+.loginBox {
+    height: 70%;
+    width: 60%;
+    padding: 20px;
+    margin-left: 150px;
+    background-color: white;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid black;
+}
+
+.input {
+    height: 50px;
+    border-radius: 20px;
+    width: 80%;
+    border: 1px solid rgb(0, 0, 0);
+    font-size: 22px;
+    padding: 10px;
+    align-self: center;
+    display: block;
+    margin: 0 auto;
+    outline: none;
+}
+
+/* login button */
+
+.loginSub {
+    outline: none;
+    border-radius: 15px;
+    border: none;
+    color: rgb(255, 255, 255);
+    background-color: rgba(0, 223, 186, 0.801);
+    height: 60px;
+    width: 200px;
+    font-size: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    align-self: center;
+}
+
+.loginSub:hover {
+    background-color: rgba(24, 20, 20, 0.5);
+}
+
+/* register button */
+
+.registerSub {
+    outline: none;
+    border-radius: 15px;
+    border: none;
+    color: white;
+    background-color: rgba(114, 2, 2, 0.836);
+    height: 50px;
+    width: 110px;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    align-self: center;
+}
+
+.registerSub:hover {
+    background-color: rgba(24, 20, 20, 0.5);
+}
+
+.loginErrorMsg {
+    margin-bottom: 0;
+    color: #842029;
+    background-color: #f8d7da;
+    border-color: #f5c2c7;
+    padding: 2px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    width: fit-content;
+    font-size:small;
+    margin: 0 auto;
+}

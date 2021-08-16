@@ -1,0 +1,110 @@
+:root {
+    --color1: rgba(177, 143, 109, 0.79);
+    --color2: rgba(153, 34, 34, 0.72);
+    --receiveColor: rgba(44, 129, 27, 0.758);
+}
+
+.triangle {
+    height: 100%;
+    position: relative;
+    float: left;
+}
+
+.trianglePart {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+}
+
+/* // up bright color  */
+
+.triangleLeftUpBright {
+    left: 0;
+    background: linear-gradient(to left bottom, var(--color1) 0%, var(--color1) 49%, transparent 51%);
+}
+
+.triangleRightUpBright {
+    left: 50%;
+    background: linear-gradient(to Right bottom, var(--color1) 0%, var(--color1) 49%, transparent 51%);
+}
+
+/* //up Dark color  */
+
+.triangleLeftUpDark {
+    left: 0;
+    background: linear-gradient(to left bottom, var(--color2) 0%, var(--color2) 49%, transparent 51%);
+}
+
+.triangleRightUpDark {
+    left: 50%;
+    background: linear-gradient(to right bottom, var(--color2) 0%, var(--color2) 49%, transparent 51%);
+}
+
+/* //down bright color */
+
+.triangleLeftdownBright {
+    left: 0;
+    background: linear-gradient(to left top, var(--color1) 0%, var(--color1) 49%, transparent 51%);
+}
+
+.triangleRightdownBright {
+    left: 50%;
+    background: linear-gradient(to right top, var(--color1) 0%, var(--color1) 49%, transparent 51%);
+}
+
+/* //down dark color */
+
+.triangleLeftdownDark {
+    left: 0;
+    background: linear-gradient(to left top, var(--color2) 0%, var(--color2) 49%, transparent 51%);
+}
+
+.triangleRightdownDark {
+    left: 50%;
+    background: linear-gradient(to right top, var(--color2) 0%, var(--color2) 49%, transparent 51%);
+}
+
+.checkersContainer {
+    position: absolute;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-flow: column;
+}
+
+.canRecive {
+    position: relative;
+    height: 10%;
+    width: 40%;
+    overflow: hidden;
+    border-radius: 50%;
+    background-color: rgba(2, 182, 2, 0.404);
+    display: flex;
+    flex-flow: column;
+    top: 87%;
+    margin-left: 30%;
+}
+
+.cannotRecive {
+    position: relative;
+    height: 10%;
+    width: 40%;
+    overflow: hidden;
+    border-radius: 50%;
+    background-color: rgba(146, 0, 0, 0.384);
+    display: flex;
+    flex-flow: column;
+    top: 87%;
+    margin-left: 30%;
+}
+
+.chekersContainerPosition {
+    flex-flow: column-reverse;
+}
+
+.recivablePos {
+    top: 5%;
+}

@@ -1,0 +1,29 @@
+.diceWrapper {
+    display: flex;
+    height: 70%;
+}
+
+.dice1 {
+    flex: 1;
+}
+
+.dice2 {
+    flex: 1;
+}
+.rollClick{
+    flex: 1;
+}
+.diceRollButton {
+    background-color: rgba(28, 28, 85, 0.459);
+    border-radius: 20%;
+    color: whitesmoke;
+    width: 90%;
+    height: 100%;
+    font-weight: 600;
+}
+.diceRollButton:disabled{
+    background-color: gray;
+}
+.diceRolling{
+    height: fit-content;
+}

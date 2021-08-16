@@ -1,0 +1,27 @@
+.friendsWrapper {
+    height: 95%;
+    display: block;
+    grid-template-columns: 1fr;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-y: scroll;
+    padding-left: 5px;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding-top: 10px;
+    padding-left:5px;
+    padding-bottom: 5px;
+    margin-top: 15px;
+}
+
+.user:hover {
+    background-color: rgba(211, 213, 255, 0.89);
+}
+
+.userName {
+    font-weight: 700;
+}

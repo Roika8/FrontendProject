@@ -1,0 +1,41 @@
+.preGame {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(142, 100, 162, 0.578);
+    align-items: center;
+    display: grid;
+}
+
+.startGameBtn {
+    text-align: center;
+    display: inline-block;
+    margin: 0 auto;
+    font-weight: bold;
+    padding: 10px 0 10px 10px;
+    background-color: lightgray;
+    text-shadow: -1px -1px black, 1px 1px white;
+    color: gray;
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    -o-border-radius: 7px;
+    border-radius: 7px;
+    box-shadow: 0 .2em gray;
+    cursor: pointer;
+    height: 10%;
+    width: 20%;
+    font-size: x-large;
+}
+
+.exitBtn {
+    background-color: rgba(171, 0, 0, 0.476);
+    height: 20px;
+    font-size: x-small;
+    font-weight: bolder;
+    margin-left: 47%;
+    color: white;
+    border-radius: 10px;
+}
+.exitBtn:hover{
+    background-color: lightgoldenrodyellow;
+    color: black;
+}

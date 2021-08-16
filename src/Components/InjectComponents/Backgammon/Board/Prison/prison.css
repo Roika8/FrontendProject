@@ -1,0 +1,40 @@
+/* .eatenCheckersContainerPlayer1 {
+    position: absolute;
+    overflow: hidden;
+    display: flex;
+    flex-flow: column;
+    width: 95%;
+    height: 65%;
+    top: 15%;
+}
+
+.eatenCheckersContainerPlayer2 {
+    position: absolute;
+    overflow: hidden;
+    display: flex;
+    flex-flow: column;
+    flex-direction: column-reverse;
+    width: 95%;
+    height: 65%;
+    top: 25%;
+} */
+.prison{
+    height: 100%;
+    position: relative;
+    float: left;
+}
+
+.prisonPart {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+}
+.prisonCheckersContainer{
+    position: absolute;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    display:inline-block;
+}

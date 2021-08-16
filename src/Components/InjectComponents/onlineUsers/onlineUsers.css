@@ -1,0 +1,39 @@
+.chatOnlineFriend {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-left: 10%;
+    position:relative;
+}
+.chatOnlineFriend:hover{
+    background-color: lightgreen;
+    border-radius: 10px;
+}
+.iconBadgeContainer{
+    position: relative;
+    margin-right: 10px;
+}
+.userIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.onlineBadge {
+    position: relative;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: green;
+    top:0px;
+    right: 3px;
+    padding: 5px;
+    margin-left: 10%;
+
+}
+.onlineUserName{
+    padding: 5px;
+}
