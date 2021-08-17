@@ -96,7 +96,6 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
 
     //Handle (validate) selected checker
     const handleTriangleMovment = (value) => {
-        console.log(value);
         if (value[0] === true) {  //Send mode ON
             if (eatMode) {
                 setSenderIndex(value[1]);
@@ -112,13 +111,11 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
         else {//Recive mode ON
             if (eatMode) {
                 if (value[1] === -1 || value[1] === -2) {
-                    console.log('eee');
                     setSendMode(true)
                     restartTrianglesAvailability();
                     setSenderIndex();
                 }
                 else {
-                    console.log(';rijvnr');
                     setReciverIndex(value[1]);
                     setSendMode(true) //After recive set to send
                 }
@@ -183,7 +180,6 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
         return false;
     }
     const checkIfAllCheckersInBase1 = (playerOutCheckers) => {
-        console.log(playerOutCheckers);
         let player1CheckersSum = 0;
         for (let i = 0; i < 6; i++) {
             player1CheckersSum += points[23 - i].checkers;
@@ -271,7 +267,6 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
                 setIsPlayer1Turn(isPlayer1Turn)
             })
             gameSocket.current.on('refreshBoard', data => {
-                console.log('refrsh');
                 const { pointsClone } = data;
                 setPoints(pointsClone);
             })
@@ -335,13 +330,11 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
                 if (eatMode) {
                     if (reciverPointIndex < 6) {
                         if (turnsCounter === 0) {
-                            console.log('point index: ' + reciverPointIndex);
                             if (dice1Value === reciverPointIndex + 1 || dice2Value === reciverPointIndex + 1) {
                                 pointsClone[reciverPointIndex].isAvailable = true;
                             }
                         }
                         else {
-                            console.log('First turn vlue: ' + firstTurnValue);
                             if (firstTurnValue === dice1Value) { //if dice 1 turn already made
                                 if (dice2Value === reciverPointIndex) {
                                     pointsClone[reciverPointIndex].isAvailable = true;
@@ -366,8 +359,6 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
                         }
                     }
                     else { //if last turn
-                        console.log('here second turn player 1');
-                        console.log('First turn value: ' + firstTurnValue);
 
                         if (firstTurnValue === dice1Value) { //if dice 1 turn already made
                             if (senderIndex + dice2Value === reciverPointIndex) {
@@ -427,8 +418,6 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
                         }
                     }
                     else { //if last turn
-                        console.log('here second turn player 2');
-                        console.log('First turn value: ' + firstTurnValue);
 
                         if (firstTurnValue === dice1Value) { //if dice 1 turn already made
                             if (senderIndex - dice2Value === reciverPointIndex) {
@@ -445,7 +434,6 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
                 }
             })
             if (eatMode) {
-                console.log(pointsClone);
                 for (let i = 0; i < 6; i++) {
                     if (pointsClone[23 - i].isAvailable)
                         return true;
@@ -485,7 +473,6 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
                 let pointsClone = points
                 let isFreeBefore = checkIfFreeBefore(true, pointsClone)
                 if (turnsCounter === 0) { //if not last turn
-                    console.log('In player 1 first turn, Sender inedx: ' + senderIndex + " turncounter: " + turnsCounter + " dice1 value: " + dice1Value + " dice2 valje: " + dice2Value + " senderIndex: " + senderIndex + " is free before: " + isFreeBefore + " player 1 out checkers ");
                     if ((senderIndex === 24 - dice1Value && !isFreeBefore) || (isFreeBefore && senderIndex >= 24 - dice1Value)) {
                         pointsClone[senderIndex].checkers -= 1;
                         outHandle(true, dice1Value, turnsCounter, player1OutCheckers, player2OutCheckers);
@@ -502,17 +489,13 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
                     }
                 }
                 else {
-                    console.log('firstTurnValue: ' + firstTurnValue + " dice 1 value: " + dice1Value + " dice 2 value: " + dice2Value);
                     if (firstTurnValue === dice1Value) {
-                        console.log('In player 1 not first turn, Sender inedx: ' + senderIndex + " turncounter: " + turnsCounter + " dice1 value: " + dice1Value + " dice2 valje: " + dice2Value + " first turn value: " + firstTurnValue + " senderIndex: " + senderIndex + " is free before: " + isFreeBefore + " player 1 out checkers ");
                         if ((24 - dice2Value === senderIndex && !isFreeBefore) || (isFreeBefore && 24 - dice2Value <= senderIndex)) {
                             pointsClone[senderIndex].checkers -= 1
                             outHandle(true, dice1Value, turnsCounter, player1OutCheckers, player2OutCheckers);
                         }
                     }
                     else if (firstTurnValue === dice2Value) {
-                        console.log('In player 1 no first turn, Sender inedx: ' + senderIndex + " turncounter: " + turnsCounter + " dice1 value: " + dice1Value + " dice2 valje: " + dice2Value + " first turn value: " + firstTurnValue + " senderIndex: " + senderIndex + " is free before: " + isFreeBefore + " player 1 out checkers ");
-
                         if ((24 - dice1Value === senderIndex && !isFreeBefore) || (isFreeBefore && 24 - dice1Value <= senderIndex)) {
                             pointsClone[senderIndex].checkers -= 1;
                             outHandle(true, dice1Value, turnsCounter, player1OutCheckers, player2OutCheckers);
@@ -544,9 +527,7 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
                 let isFreeBefore = checkIfFreeBefore(false, pointsClone)
 
                 if (turnsCounter === 0) { //iF not last turn
-                    console.log('In player 2 first turn, Sender inedx: ' + senderIndex + " turncounter: " + turnsCounter + " dice1 value: " + dice1Value + " dice2 valje: " + dice2Value + " senderIndex: " + senderIndex + " is free before: " + isFreeBefore + " player 1 out checkers ");
                     if ((senderIndex === dice1Value - 1 && !isFreeBefore) || (isFreeBefore && senderIndex <= dice1Value - 1)) {
-                        console.log('here');
                         pointsClone[senderIndex].checkers -= 1;
                         outHandle(false, dice1Value, turnsCounter, player1OutCheckers, player2OutCheckers);
                     }
@@ -562,22 +543,14 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
                     }
                 }
                 else {
-                    console.log('firstTurnValue: ' + firstTurnValue + " dice 1 value: " + dice1Value + " dice 2 value: " + dice2Value);
                     if (firstTurnValue === dice1Value) {
-                        console.log('In player 2 not first turn, Sender inedx: ' + senderIndex + " turncounter: " + turnsCounter + " dice1 value: " + dice1Value + " dice2 valje: " + dice2Value + " senderIndex: " + senderIndex + " is free before: " + isFreeBefore + " player 1 out checkers ");
-
                         if ((dice2Value - 1 === senderIndex && !isFreeBefore) || (isFreeBefore && senderIndex <= dice2Value - 1)) {
-                            console.log('In turn 2 handle ');
                             pointsClone[senderIndex].checkers -= 1
                             outHandle(false, dice1Value, turnsCounter, player1OutCheckers, player2OutCheckers);
                         }
                     }
                     else if (firstTurnValue === dice2Value) {
-                        console.log('In player 2 not first turn, Sender inedx: ' + senderIndex + " turncounter: " + turnsCounter + " dice1 value: " + dice1Value + " dice2 valje: " + dice2Value + " senderIndex: " + senderIndex + " is free before: " + isFreeBefore + " player 1 out checkers ");
-
                         if ((dice1Value - 1 === senderIndex && !isFreeBefore) || (isFreeBefore && senderIndex <= dice1Value - 1)) {
-                            console.log('In turn 2 handle ');
-
                             pointsClone[senderIndex].checkers -= 1;
                             outHandle(false, dice1Value, turnsCounter, player1OutCheckers, player2OutCheckers);
                         }

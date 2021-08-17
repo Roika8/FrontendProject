@@ -8,7 +8,6 @@ const getChatRoomID = async (id1Param, id2Param) => {
             id1: id1Param,
             id2: id2Param
         })
-        console.log(chatRoom);
         return chatRoom.data
     }
     catch (e) {
@@ -24,7 +23,6 @@ const getChatRoomID = async (id1Param, id2Param) => {
 const getChatRoomMessages = async (chatRoomID) => {
     try {
         const messages = await httpService.get(`${config.apiEndPoint}/message/${chatRoomID}`)
-        console.log(messages);
         return messages;
     }
     catch (e) {

@@ -28,12 +28,10 @@ const Register = (props) => {
         let errorsList;
         try {
             errorsList = validate();
-            console.log(errorsList);
             if (Object.keys(errorsList).length !== 0)
                 setErrors(errorsList)
             else {
                 const userObj = { userName: userName, password: password, email: email, firstName: firstName, lastName: lastName, gender: gender }
-                console.log(userObj);
                 const res = await UsersService.register(userObj);
                 localStorage.setItem('userToken', res.data);
                 window.location = '/';
@@ -41,14 +39,11 @@ const Register = (props) => {
         }
         catch (e) {
             if (e.message === 'username is already taken') {
-                console.log({ userNameTaken: e.message });
                 setErrors({ userNameTaken: e.message })
             }
             else {
-                console.log({ emailTaken: e.message });
                 setErrors({ emailTaken: e.message })
             }
-            console.log(errors);
         }
     }
     const genderOptions =

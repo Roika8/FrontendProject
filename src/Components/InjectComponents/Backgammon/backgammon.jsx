@@ -35,7 +35,6 @@ const Backgammon = ({ socket, reciverUserID, senderUserID, isCurrentInGame }) =>
     useEffect(() => {
         if (gameSocket) {
             gameSocket.current.on('startGame', (reciver) => {
-                console.log('here');
                 if (reciver === reciverUserID) {
                     setIsRequestedPlayer(true);
                 }
@@ -60,7 +59,7 @@ const Backgammon = ({ socket, reciverUserID, senderUserID, isCurrentInGame }) =>
     const handleGameExit = (e) => {
         e.preventDefault();
         if (window.confirm('Leaving game will disconnect the game for both player, Are you sure you want to exit?')) {
-            gameSocket.current.disconnect()
+            socket.current.emit('userExitGame',  reciverUserID );
         }
     }
 

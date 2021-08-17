@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import Dice from './dice';
 import './diceRolling.css'
 const DiceRolling = ({ dicesValues, isPlayer1Turn, disableCubes, opponentDice1Value, opponentDice2Value }) => {
-    console.log(opponentDice1Value,opponentDice2Value);
     //Random number between 1-6
     const [dice1Value, setDice1Value] = useState();
     const [dice2Value, setDice2Value] = useState();

@@ -23,7 +23,6 @@ const Login = (props) => {
             errors.userName = "We need to know your user name to let you in..";
         if (userObj.password.trim() === "")
             errors.password = "What is the secret word?";
-            console.log(errors);
         return errors;
     }
     const handleSubmit = async (e) => {
@@ -35,7 +34,6 @@ const Login = (props) => {
             else {
                 const userDetais = { userName: userName, password: password }
                 const res = await UsersService.login(userDetais)
-                console.log(res.data);
                 localStorage.setItem('userToken', res.data)
                 window.location = '/';
             }

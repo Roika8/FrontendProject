@@ -31,7 +31,6 @@ const Triangle = ({ position, color, player, numOfCheckers, isPlayer1Turn, canRe
         //Sender--------TRUE-----Number-----False
         //Reciver-------FALSE----Number-----True
         if (startRole) { //Only if can make a role
-            console.log('here');
             setTriangleData([sender, pointIndex, reciver]) //If selected send data to board
         }
     }

@@ -1,23 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
+
+//Services
 import UsersService from '../../../Services/UsersService';
 import chatService from '../../../Services/chatService';
+import jwtDecode from 'jwt-decode';
+
+
+//Connection
 import { io } from "socket.io-client";
+
+//Components
 import Message from '../../Elements/Message/Message';
-import Navbar from '../../Elements/Navbar/navbar';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-
-import clsx from 'clsx';
-
-
-import './Chat.css'
 import Users from '../../InjectComponents/Users/users';
 import OnlineUsers from '../../InjectComponents/onlineUsers/onlineUsers';
 import Backgammon from '../../InjectComponents/Backgammon/backgammon';
 import Drawer from '../../Elements/Navbar/drawer';
 import DialogRequest from '../../Elements/Dialog/DialogRequest';
 
+//Styles
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import clsx from 'clsx';
+import './Chat.css'
 const drawerWidth = 155;
-// import backgroundStarter from '../../image/backgroundStarter.png';
 const useStyles = makeStyles((theme) => ({
     drawerHeader: {
         display: 'flex',
@@ -28,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'flex-end',
     },
     content: {
-        marginTop:'64px',
+        marginTop: '64px',
         flexGrow: 1,
         display: 'flex',
         padding: theme.spacing(0),
@@ -43,19 +47,21 @@ const useStyles = makeStyles((theme) => ({
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
         }),
-        marginLeft:-35,
+        marginLeft: -35,
     },
 }));
 
+
+
 const Chat = () => {
+    const userToken = localStorage.getItem('userToken');
+    const user = jwtDecode(userToken);
     const classes = useStyles();
-    const theme = useTheme();
 
-
-    //Users search
-    const [userName, setUserName] = useState();
     //User data
-    const senderUserID = UsersService.getUserIDfromToken();
+    // const senderUserID = UsersService.getUserIDfromToken();
+    const [senderUserID, setSenderUserID] = useState(user._id);
+
     const [reciverUserID, setReciverUserID] = useState();
 
     //Chat settings
@@ -75,7 +81,9 @@ const Chat = () => {
     //Scrool down to chat
     const scrollRef = useRef();
     //Socket definition
-    const ENDPOINT = "https://soaprojectbackend.azurewebsites.net";
+    // const ENDPOINT = "https://soaprojectbackend.azurewebsites.net";
+    const ENDPOINT = 'ws://localhost:8080';
+
     const socket = useRef();
 
     const [open, setOpen] = useState(false);
@@ -93,12 +101,13 @@ const Chat = () => {
     }, [])
 
     useEffect(() => {
-        socket.current.emit('addSenderToConnection', senderUserID);
-        //Get users from server
-        socket.current.on('usersFromServer', users => {
-            setOnlineUsers(users);
-            console.log(users);
-        })
+        if (senderUserID !== null || senderUserID !== undefined) {
+            socket.current.emit('addSenderToConnection', senderUserID);
+            //Get users from server
+            socket.current.on('usersFromServer', users => {
+                setOnlineUsers(users);
+            })
+        }
     }, [senderUserID])
 
 
@@ -160,17 +169,21 @@ const Chat = () => {
             })
             socket.current.on('opponentExitGame', () => {
                 alert('Opponent left')
-                // setOutGame(true);
                 setUserInGame(false)
                 setReciverUserID();
             })
+            socket.current.on('opponentOffline', () => {
+                alert('Opponent is offline')
+                setUserInGame(false)
+                setReciverUserID();
+            })
+
         }
     }, [socket])
 
     const handleAnswer = (value) => {
         if (value[0]) {
             setReciverUserID(value[1]);
-            console.log(value[1]);
             socket.current.emit('acceptGameRequest', {
                 reciverID: value[1]
             })
@@ -231,13 +244,17 @@ const Chat = () => {
                     <div className={classes.drawerHeader}></div>
                     <div className="allUsers">
                         <div className="allUsersWrapper">
-                            <input placeholder='Search' className='userSearch' onChange={(e, val) => { e.preventDefault(); setUserName(e.target.value); console.log(e.target.value); }} />
-                            <Users onChange={onChangeReciver} senderID={senderUserID} searchedUsername={userName} />
+                            {!userInGame &&
+                                <Users onChange={onChangeReciver} senderID={senderUserID} onlineUsers={onlineUsers} />
+
+                            }
                         </div>
                     </div>
                     <div className="onlineUsers">
                         <div className="onlineUsersWrapper">
-                            {onlineUsers && <OnlineUsers users={onlineUsers} senderID={senderUserID} />}
+                            {!userInGame &&
+                                onlineUsers && <OnlineUsers users={onlineUsers} senderID={senderUserID} />
+                            }
                         </div>
                     </div>
                     <div className="chatArea">
@@ -287,7 +304,7 @@ const Chat = () => {
                             <DialogRequest userName={usernameGameRequest} senderID={userIDGameRequest} answer={handleAnswer} />
 
                         }
-                        {socket.current && reciverUserID && !outGame ?
+                        {socket.current && reciverUserID && senderUserID && !outGame ?
                             <Backgammon socket={socket} reciverUserID={reciverUserID} senderUserID={senderUserID} isCurrentInGame={(value) => setUserInGame(value)} />
                             :
                             <div className='template'>
