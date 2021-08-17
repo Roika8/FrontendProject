@@ -25,3 +25,15 @@
 .userName {
     font-weight: 700;
 }
+
+.onlineBadge {
+    position: relative;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background-color: green;
+    top:0px;
+    right: 3px;
+    padding: 5px;
+    margin-left: 10%;
+}

@@ -49,7 +49,6 @@ const login = async (user) => {
 }
 const logout = async (user) => {
     try {
-        console.log(user);
         const res = await httpService.post(`${config.apiEndPoint}/users/logout`, {
             _id: user
         });
@@ -86,16 +85,17 @@ const getAllUsers = async () => {
         }
     }
 }
-//Get muliple users by ids 
+//Get muliple users by ids
 const getUsersByID = (usersIDS) => {
     let users = []
+
     usersIDS.forEach(async (userID) => {
         const user = await httpService.get(`${config.apiEndPoint}/users/${userID}`)
         users.push(user.data);
     });
     return users;
 }
-//get user by id 
+//get user by id
 const getUserByID = async (userID) => {
     try {
         const user = await httpService.get(`${config.apiEndPoint}/users/${userID}`)
@@ -107,15 +107,15 @@ const getUserByID = async (userID) => {
 }
 
 //get user from the token in local storage
-const getUserIDfromToken = () => {
-    try {
-        const userToken = localStorage.getItem('userToken');
-        const user = jwtDecode(userToken);
-        return user._id;
-    }
-    catch (e) {
-        return -1
-    }
-}
+// const getUserIDfromToken = () => {
+//     try {
+//         const userToken = localStorage.getItem('userToken');
+//         const user = jwtDecode(userToken);
+//         return user._id;
+//     }
+//     catch (e) {
+//         return -1
+//     }
+// }
 
-export default { getUsersByID, getAllUsers, register, login, logout, getUserIDfromToken ,getUserByID}
+export default { getUsersByID, getAllUsers, register, login, logout ,getUserByID}
