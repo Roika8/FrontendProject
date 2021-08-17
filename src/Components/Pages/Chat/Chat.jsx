@@ -82,7 +82,7 @@ const Chat = () => {
     const scrollRef = useRef();
     //Socket definition
     // const ENDPOINT = "https://soaprojectbackend.azurewebsites.net";
-    const ENDPOINT = 'ws://localhost:8080';
+    const ENDPOINT = 'soaprojectbackend.azurewebsites.net';
 
     const socket = useRef();
 
