@@ -88,18 +88,6 @@
     margin-left: 30%;
 }
 
-.cannotRecive {
-    position: relative;
-    height: 10%;
-    width: 40%;
-    overflow: hidden;
-    border-radius: 50%;
-    background-color: rgba(146, 0, 0, 0.384);
-    display: flex;
-    flex-flow: column;
-    top: 87%;
-    margin-left: 30%;
-}
 
 .chekersContainerPosition {
     flex-flow: column-reverse;

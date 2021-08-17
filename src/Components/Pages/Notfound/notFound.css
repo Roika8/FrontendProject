@@ -1,0 +1,63 @@
+.wrapper {
+    height: calc(100vh - 20px);
+    display: flex;
+    width: 100%;
+    background-image: url('../../../image/startGame.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: rgba(142, 100, 162, 0.578);
+}
+
+.notFoundBtn {
+    background-color: rgba(167, 127, 76, 0.605);
+    color: rgb(0, 0, 0);
+    font-size: xx-large;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    width: 180px;
+    height: 80px;
+    margin-left: 2%;
+    font-weight: bold;
+    position: relative;
+    animation: mymove 7s infinite;
+    text-shadow: -1px -1px rgb(69 39 39), 1px 1px rgba(255, 255, 255, 0.285);
+    color: rgba(0, 0, 0, 0.823);
+    border-radius: 7px;
+    box-shadow: 0 0.2em rgb(0 0 0 / 60%);
+}
+
+#btn1 {
+    animation-timing-function: linear;
+}
+
+#btn2 {
+    animation-timing-function: ease;
+}
+
+#btn3 {
+    animation-timing-function: ease-in;
+}
+
+#btn4 {
+    animation-timing-function: ease-out;
+}
+
+#btn5 {
+    animation-timing-function: ease-in-out;
+}
+
+#btn6 {
+    animation-timing-function: ease;
+}
+
+#btn7 {
+    animation-timing-function: ease-in;
+}
+
+@keyframes mymove {
+    from {
+        top: 0px;
+    }
+    to {
+        top: 50%;
+    }
+}

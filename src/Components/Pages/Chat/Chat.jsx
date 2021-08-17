@@ -59,7 +59,6 @@ const Chat = () => {
     const classes = useStyles();
 
     //User data
-    // const senderUserID = UsersService.getUserIDfromToken();
     const [senderUserID, setSenderUserID] = useState(user._id);
 
     const [reciverUserID, setReciverUserID] = useState();
@@ -81,8 +80,8 @@ const Chat = () => {
     //Scrool down to chat
     const scrollRef = useRef();
     //Socket definition
-    // const ENDPOINT = "https://soaprojectbackend.azurewebsites.net";
-    const ENDPOINT = 'soaprojectbackend.azurewebsites.net';
+    const ENDPOINT = "https://soaprojectbackend.azurewebsites.net";
+    // const ENDPOINT = 'ws://localhost:8080';
 
     const socket = useRef();
 
@@ -100,6 +99,7 @@ const Chat = () => {
         //Set the user to socket, and revice the online users
     }, [])
 
+    //connect to socket server and recive online friends
     useEffect(() => {
         if (senderUserID !== null || senderUserID !== undefined) {
             socket.current.emit('addSenderToConnection', senderUserID);
@@ -151,7 +151,6 @@ const Chat = () => {
     useEffect(() => {
         if (socket) {
             //Handle arrival message
-
             socket.current.on("getMessage", data => {
                 let sendMessage = {
                     sender: data.senderId,
@@ -167,11 +166,13 @@ const Chat = () => {
                 setUsernameGameRequest(senderUsername);
                 setGotRequest(true);
             })
+            //Opponent exit game alert
             socket.current.on('opponentExitGame', () => {
                 alert('Opponent left')
                 setUserInGame(false)
                 setReciverUserID();
             })
+            //Opponent is offline (when asking an offline friend game )
             socket.current.on('opponentOffline', () => {
                 alert('Opponent is offline')
                 setUserInGame(false)
@@ -181,6 +182,8 @@ const Chat = () => {
         }
     }, [socket])
 
+
+    //When getting a game request
     const handleAnswer = (value) => {
         if (value[0]) {
             setReciverUserID(value[1]);
@@ -201,7 +204,6 @@ const Chat = () => {
             let messageData = await chatService.sendMessage(arrivalMessage) //Type of {id,content,chatroomID,sender,timestamp}
             setMessages([...messagesObject, messageData])
             scrollRef.current?.scrollIntoView({ behavior: 'smooth' })
-
         }
         setMsg();
     }, [arrivalMessage])
@@ -221,7 +223,7 @@ const Chat = () => {
             content: newMessageContent,
             chatRoomID: currentChatID
         }
-
+        //send the message to socket
         socket.current.emit("userSendMessage", {
             senderId: senderUserID,
             content: newMessageContent,
@@ -242,21 +244,13 @@ const Chat = () => {
                     })}
                 >
                     <div className={classes.drawerHeader}></div>
-                    <div className="allUsers">
-                        <div className="allUsersWrapper">
-                            {!userInGame &&
+                    {!userInGame &&
+                        <div className="allUsers">
+                            <div className="allUsersWrapper">
                                 <Users onChange={onChangeReciver} senderID={senderUserID} onlineUsers={onlineUsers} />
-
-                            }
+                            </div>
                         </div>
-                    </div>
-                    <div className="onlineUsers">
-                        <div className="onlineUsersWrapper">
-                            {!userInGame &&
-                                onlineUsers && <OnlineUsers users={onlineUsers} senderID={senderUserID} />
-                            }
-                        </div>
-                    </div>
+                    }
                     <div className="chatArea">
                         <div className="chatAreaWrapper">
                             <div className="chatAreaTop">
@@ -266,12 +260,11 @@ const Chat = () => {
                                         <div className="noSelectedFriend">No friends selected ..</div>
                                         :
                                         messagesObject
-                                            ?
+                                           &&
                                             messagesObject.map(msg => {
 
                                                 return (
                                                     <div key={msg._id} ref={scrollRef}>
-                                                        {/* true if The sender */}
                                                         <Message
                                                             own={msg.sender === senderUserID}
                                                             content={msg.messageContent}
@@ -281,9 +274,8 @@ const Chat = () => {
 
                                                 );
                                             })
-                                            :
-                                            <h1> a good way to start a conversation is by saying hello :)</h1>
-                                }
+
+                               }
 
                             </div>
 
@@ -300,9 +292,7 @@ const Chat = () => {
                     </div>
                     <div className="gameBoard">
                         {gotRequest &&
-
                             <DialogRequest userName={usernameGameRequest} senderID={userIDGameRequest} answer={handleAnswer} />
-
                         }
                         {socket.current && reciverUserID && senderUserID && !outGame ?
                             <Backgammon socket={socket} reciverUserID={reciverUserID} senderUserID={senderUserID} isCurrentInGame={(value) => setUserInGame(value)} />
@@ -310,7 +300,6 @@ const Chat = () => {
                             <div className='template'>
                                 <div className="welcomeSentence">Select someone to play and invite him!</div>
                             </div>
-
                         }
                     </div>
                 </main>

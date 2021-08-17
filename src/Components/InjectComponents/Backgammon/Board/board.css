@@ -6,23 +6,34 @@
 #leftSide {
     position: absolute;
     top: 3.5%;
-    left: 5%;
+    left: 3.5%;
     bottom: 0.5%;
     width: 45%;
     display: block;
-    background-color: rgba(65, 21, 21, 0.575);
+    background-color: rgba(23, 56, 37, 0.85);
     border: 1px solid black;
 }
 
 #rightSide {
     position: absolute;
     top: 3.5%;
-    left: 55%;
+    left: 52%;
     bottom: 0.5%;
     width: 45%;
     display: block;
-    background-color: rgba(65, 21, 21, 0.575);
+    background-color: rgba(23, 56, 37, 0.85);
     border: 1px solid black;
+}
+
+#middle {
+    position: absolute;
+    top: 3.5%;
+    left: 47.5%;
+    bottom: 0.5%;
+    width: 3.7%;
+    display: block;
+    border: 1px solid black;
+    background-color: rgba(128, 73, 0, 0.894);
 }
 
 .up {
@@ -47,36 +58,40 @@
     justify-content: center;
     align-content: center;
 }
-.eatenContainer{
+
+.eatenContainer {
     margin: 0 auto;
 }
-#middle{
-    position: absolute;
-    top: 3.5%;
-    left: 48.7%;
-    bottom: 0.5%;
-    width: 5%;
-    display: block;
-    border: 1px solid black;
-    background-color: rgba(248, 68, 68, 0.493);
-}
-.rotateBoard{
+
+.rotateBoard {
     -webkit-transform: rotateX(180deg);
-          transform: rotateX(180deg);
+    transform: rotateX(180deg);
 }
-.nonRotate{
-margin-top: -2.2%;
+
+.nonRotate {
+    margin-top: -2.2%;
 }
-.outBtn{
-    background-color: rgb(47, 210, 255);
+
+.outBtn {
+    background-color: rgba(128, 73, 0, 0.694);
     color: rgb(0, 0, 0);
     font-size: large;
-    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    width: 100px;
+    height: 30px;
+    margin-left: 10%;
+    margin-right: 10%;
+    text-shadow: -1px -1px rgb(69 39 39), 1px 1px rgba(255, 255, 255, 0.285);
+    color: rgba(0, 0, 0, 0.823);
+    border-radius: 7px;
+    box-shadow: 0 0.2em rgb(0 0 0 / 40%);
 }
-.outBtn:hover{
+
+.outBtn:hover {
     background-color: lightgrey;
     color: black;
 }
-.outBtn:disabled{
+
+.outBtn:disabled {
     background-color: grey;
 }

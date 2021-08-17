@@ -10,9 +10,7 @@ const Triangle = ({ position, color, player, numOfCheckers, isPlayer1Turn, canRe
     const [recivable, setRecivable] = useState();
 
     useEffect(() => {
-
-        setRecivable(canRecive === true ? 'canRecive' : 'cannotRecive')
-
+        setRecivable(canRecive === true ? 'canRecive' : '')
     })
     //Checkers array
     let checkersArray = [];
@@ -27,6 +25,7 @@ const Triangle = ({ position, color, player, numOfCheckers, isPlayer1Turn, canRe
     let chekersContainerPosition = pos === 'Up' ? '' : 'chekersContainerPosition'
     let recivablePos = pos === 'Up' ? '' : 'recivablePos'
 
+    //Every triangle click, send values to the board
     const handleTriangleSelect = () => {
         //Sender--------TRUE-----Number-----False
         //Reciver-------FALSE----Number-----True
@@ -48,6 +47,7 @@ const Triangle = ({ position, color, player, numOfCheckers, isPlayer1Turn, canRe
                     })
                 }
             </div>
+            {/* On the top of triangle appear green if avalible */}
             <div className={recivable + " " + recivablePos}></div>
         </div>
 

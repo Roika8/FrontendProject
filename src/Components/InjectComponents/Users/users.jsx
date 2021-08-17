@@ -3,19 +3,14 @@ import UsersService from '../../../Services/UsersService'
 
 import './users.css';
 const Users = ({ onChange, senderID, onlineUsers }) => {
+    console.log(onlineUsers);
     const [allUsers, setAllUsers] = useState();
     const [userNameSearch, setUserNameSearch] = useState();
     const [currentOnlineUsers, setCurrentOnlineUsers] = useState(onlineUsers);
     const [usersCount, setUsersCount] = useState(0);
 
-    // const [currentOnlineUsers, setCurrentOnlineUsers] = useState(onlineUsers)
-    // const usersId = [];
-    // useEffect(() => {
-    //     onlineUsers.forEach(user => {
-    //         usersId.push(user.userID)
-    //     });
 
-    // }, [])
+
 
     useEffect(() => {
         const getAllUsers = async () => {
@@ -24,6 +19,7 @@ const Users = ({ onChange, senderID, onlineUsers }) => {
             setUsersCount(dbUsers.length)
         }
         getAllUsers();
+
 
     }, [])
 
@@ -60,10 +56,11 @@ const Users = ({ onChange, senderID, onlineUsers }) => {
                             <span className='userName'>
                                 {user.userName}
                             </span>
-                            {/* {
-                                currentOnlineUsers.find(onlineUser => onlineUser.userID === user._id) &&
+
+                            {
+                                onlineUsers && onlineUsers.find(onlineUser => onlineUser.userID === user._id) &&
                                 <div className="onlineBadge"></div>
-                            } */}
+                            }
 
 
                         </div>

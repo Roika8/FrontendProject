@@ -18,9 +18,7 @@ const DiceRolling = ({ dicesValues, isPlayer1Turn, disableCubes, opponentDice1Va
         setDice2Value(val2);
 
         dicesValues([val1, val2])
-        // setPlayer1Turn(!player1Turn)
 
-        // setCanRoll(false);
     }
 
     return (
@@ -36,7 +34,14 @@ const DiceRolling = ({ dicesValues, isPlayer1Turn, disableCubes, opponentDice1Va
                     <div className="rollClick">
                         <button onClick={roll} className="diceRollButton" disabled={disableCubes}>Roll</button>
                     </div>
-                    {isFirstTime && !opponentDice1Value ? 'Start game' : isPlayer1Turn ? <div>Player 1 role</div> : <div>Player 2 role</div>}
+
+                    <div className="turnLabel">
+                        {
+                            isFirstTime && !opponentDice1Value
+                                ? 'Start game' : isPlayer1Turn ? <div>Player 1 role</div> : <div>Player 2 role</div>
+                        }
+                    </div>
+
                 </div>
 
                 <div className="dice2">

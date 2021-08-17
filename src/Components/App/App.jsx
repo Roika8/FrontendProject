@@ -7,7 +7,7 @@ import notFound from '../Pages/Notfound/notFound';
 import Login from '../Pages/Login/login';
 import Register from '../Pages/Register/regiester';
 import Chat from '../Pages/Chat/Chat';
-
+import About from '../Pages/About/about';
 const App = () => {
     const history = useHistory();
     let LoggedInUser = "";
@@ -24,20 +24,18 @@ const App = () => {
         }
     })
     return (
-        <div>
+        <React.Fragment>
             <main className="Container">
                 <Switch>
-                    {/* <Route path='/' render={props => <Chat socketConnection={socket} {...props} />} /> */}
                     <Route path='/Main' component={(props) => <Chat {...props} user={LoggedInUser} />} />
                     <Route path='/login' component={Login} />
                     <Route path='/register' component={Register} />
+                    <Route path='/about' component={About} />
                     <Route path='/not-found' component={notFound} />
-                    {/* <Route path='/' exact component={Users} /> */}
                     <Redirect to='/not-found' />
                 </Switch>
             </main>
-        </div>
-
+        </React.Fragment>
     )
 }
 

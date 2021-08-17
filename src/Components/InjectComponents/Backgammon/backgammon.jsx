@@ -9,7 +9,6 @@ const Backgammon = ({ socket, reciverUserID, senderUserID, isCurrentInGame }) =>
     const [gameSocket, setGameSocket] = useState(socket);
 
 
-
     //Init points
     useEffect(() => {
         let array = [];
@@ -38,9 +37,12 @@ const Backgammon = ({ socket, reciverUserID, senderUserID, isCurrentInGame }) =>
                 if (reciver === reciverUserID) {
                     setIsRequestedPlayer(true);
                 }
+
                 setStartGame(true);
                 //Send the opponent ID
                 isCurrentInGame([true, reciver === reciverUserID ? senderUserID : reciverUserID]);
+
+
             })
         }
 
@@ -59,7 +61,7 @@ const Backgammon = ({ socket, reciverUserID, senderUserID, isCurrentInGame }) =>
     const handleGameExit = (e) => {
         e.preventDefault();
         if (window.confirm('Leaving game will disconnect the game for both player, Are you sure you want to exit?')) {
-            socket.current.emit('userExitGame',  reciverUserID );
+            socket.current.emit('userExitGame', reciverUserID);
         }
     }
 
@@ -71,11 +73,11 @@ const Backgammon = ({ socket, reciverUserID, senderUserID, isCurrentInGame }) =>
                     points && gameSocket &&
                     <React.Fragment>
                         <button className="exitBtn" onClick={(e) => handleGameExit(e)}>exit game</button>
-                        <Board posPoints={points} isRequestedPlayer={isRequestedPlayer} socket={gameSocket} senderUserID={senderUserID} reciverUserID={reciverUserID} />
+                        <Board posPoints={points} isRequestedPlayer={isRequestedPlayer} socket={gameSocket} senderUserID={senderUserID} reciverUserID={reciverUserID}  />
                     </React.Fragment>
 
                     :
-                    <div className='preGame'>
+                    <div className='template'>
                         {
                             <button className="startGameBtn" onClick={handleStartGame} >Send request</button>
                         }

@@ -3,7 +3,7 @@ import './board.css'
 import DiceRolling from './Dice/diceRolling';
 import Triangle from './Triangles/triangle'
 import Prison from './Prison/prison';
-export default function Board({ posPoints, isRequestedPlayer, socket, senderUserID, reciverUserID }) {
+export default function Board({ posPoints, isRequestedPlayer, socket, reciverUserID }) {
     const [gameSocket, setGameSocket] = useState(socket)
 
     //Dices valus
@@ -22,7 +22,6 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
     const [sendMode, setSendMode] = useState(true)//If false it's recive-mode
     //Every player have 2 turns
     const [turnsCounter, setTurnsCounter] = useState(0);
-    const [passTurn, setPassTurn] = useState(false);
     //True- player 1 turn. False-player 2 turn.
     const [isPlayer1Turn, setIsPlayer1Turn] = useState(false);
     const [notMyTurn, setNotMyTurn] = useState(isPlayer1Turn && !isRequestedPlayer);
@@ -36,6 +35,9 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
     const [player2EatenCheckers, setPlayer2EatenCheckers] = useState(0);
     const [eatMode, setEatMode] = useState(false);
 
+    //Indicate if stuck in prison
+    let prisonStuck = false;
+
     //Players statring getting checkersOut
     const [player1Outing, setPlayer1Outing] = useState(false);
     const [player2Outing, setPlayer2Outing] = useState(false);
@@ -43,8 +45,6 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
     const [player1OutCheckers, setPlayer1OutCheckers] = useState(0);
     const [player2OutCheckers, setPlayer2OutCheckers] = useState(0);
 
-
-    /////////////////////////////////////////////////////////////Handle DICE Values/////////////////////////
     //get the dice values, And set the player turn (1 or 2)
     const getDiceValues = (values) => {
         setDisableCube(true); //Disable cube rolling
@@ -53,20 +53,19 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
         setDice2Value(values[1]);
         const val1 = values[0];
         const val2 = values[1];
-        if ((isPlayer1Turn && !isRequestedPlayer) || (!isPlayer1Turn && isRequestedPlayer)) { //If its player 1 and player 1 turn or the opposite
+        //If its player 1 and player 1 turn or the opposite
+        if ((isPlayer1Turn && !isRequestedPlayer) || (!isPlayer1Turn && isRequestedPlayer)) {
             gameSocket.current.emit('sendDicesValues', { val1, val2, reciverUserID })
         }
     }
 
-
-
-    //After gettin the dice values, reset the avalible triangles
+    //After getting the dice values, reset the avalible triangles
     useEffect(() => {
         restartTrianglesAvailability();
     }, [dice1Value, dice2Value])
 
-    //Set eat mode on (player have eaten checkers)
     useEffect(() => {
+        //Set eat mode on (player have eaten checkers)
         if ((player1EatenCheckers > 0 && isPlayer1Turn) || (player2EatenCheckers > 0 && !isPlayer1Turn)) {
             setEatMode(true);
             setStartRole(false)
@@ -74,11 +73,13 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
 
         if (gameSocket) {
             //is player 1 turn but im player 2          is player 2 turn but im not player 2  (Not my turn)
-            if ((isPlayer1Turn && isRequestedPlayer) || (!isPlayer1Turn && !isRequestedPlayer)) { //If the other player made a turn
+            //Not my turn, disable cube,cant start role,eat mode is false
+            if ((isPlayer1Turn && isRequestedPlayer) || (!isPlayer1Turn && !isRequestedPlayer)) {
                 setNotMyTurn(true);
                 setDisableCube(true);
                 setStartRole(false);
                 setEatMode(false)
+                //Get opponent dices values
                 gameSocket.current.on('getOppenentDicesValues', data => {
                     const { val1, val2 } = data;
                     setDice1Value(val1);
@@ -87,7 +88,7 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
             }
             else {
                 setDisableCube(false);
-                setStartRole(false)
+                setStartRole(false);
             }
             gameSocket.current.emit('isPlayer1Turn', { isPlayer1Turn, reciverUserID });
         }
@@ -96,19 +97,20 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
 
     //Handle (validate) selected checker
     const handleTriangleMovment = (value) => {
-        if (value[0] === true) {  //Send mode ON
+        //Send mode ON
+        if (value[0] === true) {
             if (eatMode) {
                 setSenderIndex(value[1]);
                 setSendMode(false);
             }
-            else if (points[value[1]].player === 1 && isPlayer1Turn
-                ||
-                points[value[1]].player === 2 && !isPlayer1Turn) {//If the sender match the player
+            //If the sender match the player (valid check)
+            else if (points[value[1]].player === 1 && isPlayer1Turn || points[value[1]].player === 2 && !isPlayer1Turn) {
                 setSenderIndex(value[1]);
                 setSendMode(false);
             }
         }
-        else {//Recive mode ON
+        //Recive mode ON
+        else {
             if (eatMode) {
                 if (value[1] === -1 || value[1] === -2) {
                     setSendMode(true)
@@ -120,7 +122,8 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
                     setSendMode(true) //After recive set to send
                 }
             }
-            else if (value[1] === senderIndex) {//If I click the te checker I aleady clicked, unclick it
+            //If I click the te checker I aleady clicked, unclick it
+            else if (value[1] === senderIndex) {
                 setSendMode(true)
                 restartTrianglesAvailability();
                 setSenderIndex();
@@ -128,28 +131,24 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
             else if (points[value[1]].isAvailable) {
                 setReciverIndex(value[1]);
                 setSendMode(true) //After recive set to send
-                // setEatMode(false); //Eat mode disable
-
             }
-
-
         }
     }
 
     //Calculate avalible triangles according to sender position
     useEffect(() => {
+        //Check if player in prison
         const res = calculateAvailableTriangles(senderIndex)
         if (!res) {
-            setPassTurn(true);
+            prisonStuck = true;
         }
-        else {
-            setPassTurn(false);
-        }
-
+        else
+            prisonStuck = false;
 
     }, [senderIndex])
 
 
+    //Handle player 1 out checkers
     useEffect(() => {
         if (player1OutCheckers === 15) {
             alert('player 1 win!')
@@ -159,7 +158,7 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
         else setPlayer1Outing(false);
     }, [turnsCounter, player1OutCheckers])
 
-
+    //Handle player 2 out checkers
     useEffect(() => {
         if (player2OutCheckers === 15) {
             alert('player 2 win!')
@@ -169,6 +168,7 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
         else setPlayer2Outing(false);
     }, [turnsCounter, player2OutCheckers])
 
+    //Check all checkers player in his base (for letting out)
     const checkIfAllCheckersInBase2 = (playerOutCheckers) => {
         let player2CheckersSum = 0;
         for (let i = 0; i < 6; i++) {
@@ -189,6 +189,8 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
         }
         return false;
     }
+
+
     //Moving the checkers
     useEffect(() => {
         if (reciverIndex || reciverIndex === 0) {
@@ -196,7 +198,9 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
                 setTurnsCounter(turnsCounter + 1) //Turns counter (every player gets 2 turns)
                 let pointsClone = points;
 
+                //Decrese the checker from triangle
                 if (!eatMode) pointsClone[senderIndex].checkers -= 1;
+
                 if (isPlayer1Turn) { //Player 1 chckers handler
                     if (eatMode) { //If let the checker out of prison
                         if (player1EatenCheckers - 1 === 0)
@@ -239,13 +243,16 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
                     }
 
                 }
+
+                //Set triangle avalible and no player there if there is no checkers
                 if (!eatMode && pointsClone[senderIndex].checkers === 0) {
                     pointsClone[senderIndex].player = false;
                     pointsClone[senderIndex].isAvailable = true;
-
                 }
 
+                //Increess checker at reciver
                 pointsClone[reciverIndex].checkers += 1;
+                //Update everthing
                 setPoints([...pointsClone])
                 restartTrianglesAvailability();
                 setSenderIndex();
@@ -259,7 +266,9 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
         }
     }, [reciverIndex])
 
-    //Change the player turn
+
+
+    //According every turn refresh and update turns, board,and prisonCheckers.
     useEffect(() => {
         //Update the board according every move made
         if (gameSocket) {
@@ -277,6 +286,8 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
                 setPlayer2EatenCheckers(data.player2EatenCheckers);
             })
         }
+        //If was last turn
+        //reset and get back to opposite settings
         if ((turnsCounter === 2 && dice1Value !== dice2Value) || turnsCounter === 4 && dice1Value === dice2Value) {
             setIsPlayer1Turn(!isPlayer1Turn);
             setDisableCube(false);//enable the cube rolling after done play
@@ -284,6 +295,7 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
             setTurnsCounter(0);
             restartTrianglesAvailability();
         }
+        //Indicate if player can start moving checkers out
         if (checkIfAllCheckersInBase1(player1OutCheckers)) {
             setPlayer1Outing(true)
         }
@@ -296,7 +308,7 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
     }, [turnsCounter])
 
 
-
+    //Send to socket server eaten checkers
     useEffect(() => {
         socket.current.emit('eatenPlayer1Checkers', { reciverUserID, player1EatenCheckers });
     }, [player1EatenCheckers])
@@ -306,7 +318,7 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
 
 
 
-
+    //Set every traingels to unavaible
     const restartTrianglesAvailability = () => {
         let pointsClone = points;
         pointsClone.map(point => point.isAvailable = false);
@@ -317,7 +329,6 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
     const calculateAvailableTriangles = (senderIndexValue) => {
         let pointsClone = points;
         if (isPlayer1Turn) {
-
             const availablePoints = pointsClone.filter(point =>
                 point.checkers <= 1 //if has only 1 checker
                 || point.player !== 2 //If not player 2
@@ -373,6 +384,8 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
                     }
                 }
             })
+
+            //Check if by eat mode chckers can go out
             if (eatMode) {
                 for (let i = 0; i < 6; i++) {
                     if (pointsClone[i].isAvailable)
@@ -389,6 +402,8 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
 
             availablePoints.forEach(point => {
                 const reciverPointIndex = pointsClone.indexOf(point)
+
+                //Calculate according to eat mode (can only recive on his own base)
                 if (eatMode) {
                     if (reciverPointIndex > 17) {
                         if (turnsCounter === 0) {
@@ -433,6 +448,8 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
                     }
                 }
             })
+            //Check if by eat mode chckers can go out
+
             if (eatMode) {
                 for (let i = 0; i < 6; i++) {
                     if (pointsClone[23 - i].isAvailable)
@@ -444,6 +461,8 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
 
         setPoints([...pointsClone]);
     }
+
+    //When outing checkers, check if a bigger dice value can let checker out if his index is smaller
     const checkIfFreeBefore = (isPlayer1Turn, points) => {
         if (isPlayer1Turn) {
             for (let i = 18; i < senderIndex; i++) {
@@ -453,12 +472,14 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
         }
         else {
             for (let i = 5; i > senderIndex; i--) {
-                if (points[i].checkers !== 0&& points[i].player === 2)
+                if (points[i].checkers !== 0 && points[i].player === 2)
                     return false;
             }
         }
         return true;
     }
+
+    //Let the checker out
     const outHandle = (isPlayer1Turn, diceValue, turnsCounter, player1OutCheckers, player2OutCheckers) => {
         setFirstTurnValue(diceValue);
         setTurnsCounter(turnsCounter + 1)
@@ -467,12 +488,15 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
         restartTrianglesAvailability();
         setSenderIndex();
     }
+
+
     const handleOuting = () => {
         if (isPlayer1Turn && !isRequestedPlayer) {
             if (player1Outing) {
                 let pointsClone = points
                 let isFreeBefore = checkIfFreeBefore(true, pointsClone)
                 if (turnsCounter === 0) { //if not last turn
+                    //Check if selected index match and dices value
                     if ((senderIndex === 24 - dice1Value && !isFreeBefore) || (isFreeBefore && senderIndex >= 24 - dice1Value)) {
                         pointsClone[senderIndex].checkers -= 1;
                         outHandle(true, dice1Value, turnsCounter, player1OutCheckers, player2OutCheckers);
@@ -489,12 +513,16 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
                     }
                 }
                 else {
+                    //Check if selected index match and dice 1 value
+                    //Caluclate according to dice 2 value
                     if (firstTurnValue === dice1Value) {
                         if ((24 - dice2Value === senderIndex && !isFreeBefore) || (isFreeBefore && 24 - dice2Value <= senderIndex)) {
                             pointsClone[senderIndex].checkers -= 1
                             outHandle(true, dice1Value, turnsCounter, player1OutCheckers, player2OutCheckers);
                         }
                     }
+                    //Check if selected index match and dice2 value
+                    //Caluclate according to dice 1 value
                     else if (firstTurnValue === dice2Value) {
                         if ((24 - dice1Value === senderIndex && !isFreeBefore) || (isFreeBefore && 24 - dice1Value <= senderIndex)) {
                             pointsClone[senderIndex].checkers -= 1;
@@ -525,7 +553,7 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
             if (player2Outing) {
                 let pointsClone = points
                 let isFreeBefore = checkIfFreeBefore(false, pointsClone)
-
+                //Check if the selected index match the dices value
                 if (turnsCounter === 0) { //iF not last turn
                     if ((senderIndex === dice1Value - 1 && !isFreeBefore) || (isFreeBefore && senderIndex <= dice1Value - 1)) {
                         pointsClone[senderIndex].checkers -= 1;
@@ -543,12 +571,16 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
                     }
                 }
                 else {
+                    //Check if selected index match and dice1 value
+                    //Caluclate according to dice 2 value
                     if (firstTurnValue === dice1Value) {
                         if ((dice2Value - 1 === senderIndex && !isFreeBefore) || (isFreeBefore && senderIndex <= dice2Value - 1)) {
                             pointsClone[senderIndex].checkers -= 1
                             outHandle(false, dice1Value, turnsCounter, player1OutCheckers, player2OutCheckers);
                         }
                     }
+                    //Check if selected index match and dice 2 value
+                    //Caluclate according to dice 1 value
                     else if (firstTurnValue === dice2Value) {
                         if ((dice1Value - 1 === senderIndex && !isFreeBefore) || (isFreeBefore && senderIndex <= dice1Value - 1)) {
                             pointsClone[senderIndex].checkers -= 1;
@@ -569,21 +601,142 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
                 }
             }
             else {
-                alert('You need all checkers on your base')
+                alert('You need all checkers on your base !')
                 setSendMode(true)
                 restartTrianglesAvailability();
                 setSenderIndex();
             }
         }
     }
-    const handleTurnPass = () => {
+
+    //Check if can pass a turn
+    const handleTurnPass = (e) => {
+        e.preventDefault();
+        if (isPlayer1Turn && isRequestedPlayer) {
+            alert('You cant pass when its not your turn')
+        }
+        else if (!isPlayer1Turn && !isRequestedPlayer) {
+            alert('You cant pass when its not your turn')
+        }
+        else if (checkIfStuck()) {
+            nextTurn();
+        }
+        else if (prisonStuck) {
+            nextTurn();
+        }
+        else {
+            alert('You cant pass a turn unless youre stuck!')
+        }
+
+    }
+    //Set next turn
+    const nextTurn = () => {
         if (dice1Value === dice2Value) {
             setTurnsCounter(4)
         }
         else {
             setTurnsCounter(2);
         }
-        setPassTurn(false)
+        prisonStuck = false;
+    }
+
+
+    const checkIfStuck = () => {
+        if (points && !eatMode) {
+            let pointsClone = points;
+            let stuckCounter = 0;
+            //Player 1
+            if (isPlayer1Turn && !isRequestedPlayer) {
+                const player1Points = pointsClone.filter(point => point.player === 1)
+                //Check for each point, if it can make a move
+                player1Points.forEach(point => {
+                    const pointIndex = pointsClone.indexOf(point);
+                    const firstDiceArrival = pointIndex + dice1Value;
+                    const secondDiceArrival = pointIndex + dice2Value;
+                    //Check by 2 dices value if its first turn
+                    if (turnsCounter === 0) {
+                        if (firstDiceArrival < 24) {
+                            if (pointsClone[firstDiceArrival].player === 2 && pointsClone[firstDiceArrival].checkers > 1) {
+                                stuckCounter += 1
+                            }
+                        }
+                        else stuckCounter += 1
+                        if (secondDiceArrival < 24) {
+                            if (pointsClone[secondDiceArrival].player === 2 && pointsClone[secondDiceArrival].checkers > 1) {
+                                if (secondDiceArrival < 24)
+                                    stuckCounter += 1
+                            }
+                        } else stuckCounter += 1
+                    }
+                    //Check by 2nd dice value (if I already use dice 1, check dice 2)
+                    else {
+                        if (firstTurnValue === dice1Value) {
+                            if (secondDiceArrival < 24) {
+                                if (pointsClone[secondDiceArrival].player === 2 && pointsClone[secondDiceArrival].checkers > 1) {
+                                    if (secondDiceArrival < 24)
+                                        stuckCounter += 1
+                                }
+                            } else stuckCounter += 1
+                        }
+                        else {
+                            if (firstDiceArrival < 24) {
+                                if (pointsClone[firstDiceArrival].player === 2 && pointsClone[firstDiceArrival].checkers > 1) {
+                                    stuckCounter += 1
+                                }
+                            }
+                            else stuckCounter += 1
+                        }
+
+
+                    }
+                })
+
+                return turnsCounter === 0 ? stuckCounter === player1Points.length * 2 : stuckCounter === player1Points.length;
+            }
+            //player 2
+            else {
+                const player2Points = pointsClone.filter(point => point.player === 2)
+                //Check for each point, if it can make a move
+                player2Points.forEach(point => {
+                    const pointIndex = pointsClone.indexOf(point);
+                    const firstDiceArrival = pointIndex - dice1Value;
+                    const secondDiceArrival = pointIndex - dice2Value;
+                    //Check by 2 dices value if its first turn
+                    if (turnsCounter === 0) {
+                        if (firstDiceArrival >= 0) {
+                            if (pointsClone[firstDiceArrival].player === 1 && pointsClone[firstDiceArrival].checkers > 1) {
+                                stuckCounter += 1
+                            }
+                        } else stuckCounter += 1
+                        if (secondDiceArrival >= 0) {
+                            if (pointsClone[secondDiceArrival].player === 1 && pointsClone[secondDiceArrival].checkers > 1) {
+                                stuckCounter += 1
+                            }
+                        } else stuckCounter += 1
+                    }
+                    else {
+                        //Check by 2nd dice value (if I already use dice 1, check dice 2)
+                        if (firstTurnValue === dice1Value) {
+                            if (secondDiceArrival > 0) {
+                                if (pointsClone[secondDiceArrival].player === 1 && pointsClone[secondDiceArrival].checkers > 1) {
+                                    stuckCounter += 1
+                                }
+                            } else stuckCounter += 1
+                        }
+                        else {
+                            if (firstDiceArrival > 0) {
+                                if (pointsClone[firstDiceArrival].player === 1 && pointsClone[firstDiceArrival].checkers > 1) {
+                                    stuckCounter += 1
+                                }
+                            }
+                            else stuckCounter += 1
+                        }
+
+                    }
+                })
+                return turnsCounter === 0 ? stuckCounter === player2Points.length * 2 : stuckCounter === player2Points.length;
+            }
+        }
     }
     return (
 
@@ -597,6 +750,10 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
                     <Triangle position='up' color={0} numOfCheckers={points[8].checkers} player={points[8].player} isPlayer1Turn={isPlayer1Turn} canRecive={points[8].isAvailable} sender={sendMode} reciver={!sendMode} pointIndex={8} setTriangleData={handleTriangleMovment} startRole={startRole} eatMode={eatMode} />
                     <Triangle position='up' color={1} numOfCheckers={points[7].checkers} player={points[7].player} isPlayer1Turn={isPlayer1Turn} canRecive={points[7].isAvailable} sender={sendMode} reciver={!sendMode} pointIndex={7} setTriangleData={handleTriangleMovment} startRole={startRole} eatMode={eatMode} />
                     <Triangle position='up' color={0} numOfCheckers={points[6].checkers} player={points[6].player} isPlayer1Turn={isPlayer1Turn} canRecive={points[6].isAvailable} sender={sendMode} reciver={!sendMode} pointIndex={6} setTriangleData={handleTriangleMovment} startRole={startRole} eatMode={eatMode} />
+                </div>
+                <div className={isRequestedPlayer ? "diceArea rotateBoard" : 'diceArea'}>
+                    <button className="outBtn" onClick={handleOuting} >Out</button>
+                    <button className="outBtn" onClick={(e) => handleTurnPass(e)} disabled={!disableCube}>Pass</button>
                 </div>
                 <div className='down'>
                     <Triangle position='down' color={0} numOfCheckers={points[12].checkers} player={points[12].player} isPlayer1Turn={isPlayer1Turn} canRecive={points[12].isAvailable} sender={sendMode} reciver={!sendMode} pointIndex={12} setTriangleData={handleTriangleMovment} startRole={startRole} eatMode={eatMode} />
@@ -622,11 +779,6 @@ export default function Board({ posPoints, isRequestedPlayer, socket, senderUser
                             <DiceRolling dicesValues={getDiceValues} opponentDice1Value={dice1Value} opponentDice2Value={dice2Value} isPlayer1Turn={isPlayer1Turn} disableCubes={disableCube} />
                             :
                             <DiceRolling dicesValues={getDiceValues} isPlayer1Turn={isPlayer1Turn} disableCubes={disableCube} />
-
-                    }
-                    <button className="outBtn" onClick={handleOuting} >Out</button>
-                    {
-                        <button className="outBtn" onClick={handleTurnPass} disabled={!eatMode}>Pass</button>
                     }
 
                 </div>
